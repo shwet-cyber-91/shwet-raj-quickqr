@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuickQR — Free QR Code Generator by Shwet Raj</title>
+<meta name="description" content="Free, no-signup QR code generator. Type a link, get a downloadable QR code instantly.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root{
+    --bg:#0b0e1a; --surface:rgba(22,26,46,0.6); --surface-solid:#161a2e;
+    --border:rgba(124,92,255,0.18); --accent:#7c5cff; --accent-2:#4fd8e0;
+    --text:#f2f1f8; --text-muted:#8a8fa3;
+    --display:'Space Grotesk', sans-serif; --body:'Inter', sans-serif; --mono:'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--text); font-family:var(--body); min-height:100vh;}
+  a{color:inherit;}
+  a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var(--accent-2); outline-offset:3px;}
+
+  header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px 28px; border-bottom:1px solid var(--border);
+    flex-wrap:wrap; gap:12px;
+  }
+  .back{font-size:14px; color:var(--text-muted); display:flex; align-items:center; gap:6px;}
+  .back:hover{color:var(--text);}
+  .brand{font-family:var(--display); font-weight:700; font-size:18px; display:flex; align-items:center; gap:8px;}
+  .brand-mark{
+    width:28px; height:28px; border-radius:8px;
+    background:linear-gradient(135deg, var(--accent), var(--accent-2));
+    display:flex; align-items:center; justify-content:center; font-size:14px;
+  }
+
+  main{max-width:920px; margin:0 auto; padding:60px 24px 40px;}
+  .page-head{margin-bottom:40px;}
+  .eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-2); margin-bottom:10px;}
+  h1{font-family:var(--display); font-weight:700; font-size:clamp(28px,5vw,40px); margin-bottom:10px;}
+  .page-sub{color:var(--text-muted); max-width:480px;}
+
+  .app{
+    display:grid; grid-template-columns:1fr 1fr; gap:32px;
+    background:var(--surface-solid); border:1px solid var(--border); border-radius:24px; padding:36px;
+  }
+  .field{margin-bottom:22px;}
+  label{display:block; font-size:13px; color:var(--text-muted); margin-bottom:8px; font-family:var(--mono);}
+  textarea, select, input[type="color"]{
+    width:100%; background:rgba(255,255,255,0.04); border:1px solid var(--border);
+    border-radius:10px; padding:12px 14px; color:var(--text); font-family:var(--body); font-size:14px;
+    resize:vertical;
+  }
+  textarea{min-height:90px;}
+  .control-row{display:flex; gap:16px;}
+  .control-row .field{flex:1;}
+  input[type="color"]{height:44px; padding:4px; cursor:pointer;}
+
+  .preview{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;}
+  .qr-frame{
+    background:#fff; padding:20px; border-radius:18px;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.6);
+  }
+  #qrcode{display:flex; align-items:center; justify-content:center;}
+  #qrcode img, #qrcode canvas{border-radius:4px;}
+
+  .btn{
+    font-family:var(--body); font-weight:600; font-size:14px; padding:13px 24px; border-radius:12px;
+    border:1px solid transparent; cursor:pointer; display:inline-flex; align-items:center; gap:8px;
+    transition:transform .2s ease, box-shadow .2s ease;
+    width:100%; justify-content:center;
+  }
+  .btn-primary{background:linear-gradient(135deg, var(--accent), #6b4fe0); color:#fff; box-shadow:0 8px 30px -8px rgba(124,92,255,.6);}
+  .btn-primary:hover{transform:translateY(-2px);}
+  .btn-primary:disabled{opacity:.5; cursor:not-allowed; transform:none;}
+
+  .dh-banner{
+    margin-top:32px; padding:20px 24px; border-radius:16px;
+    background:var(--surface); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;
+  }
+  .dh-banner p{font-size:13px; color:var(--text-muted);}
+  .btn-dh{
+    background:transparent; border:1px solid var(--accent-2); color:var(--accent-2);
+    padding:11px 20px; border-radius:10px; font-size:13px; font-weight:600;
+    display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+  }
+  .btn-dh:hover{background:rgba(79,216,224,0.1);}
+
+  footer{
+    text-align:center; padding:28px 24px; color:var(--text-muted); font-size:13px;
+    border-top:1px solid var(--border); margin-top:40px;
+  }
+  footer a{color:var(--accent-2);}
+
+  @media (max-width:720px){
+    .app{grid-template-columns:1fr;}
+    .control-row{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="REPLACE_WITH_PORTFOLIO_LIVE_URL" class="back">← Shwet Raj</a>
+  <div class="brand"><span class="brand-mark">⬛</span>QuickQR</div>
+</header>
+
+<main>
+  <div class="page-head">
+    <div class="eyebrow">Free Tool</div>
+    <h1>QR Code Generator</h1>
+    <p class="page-sub">Type a link or any text below. Your QR code updates instantly — download it as a PNG, free, no sign-up.</p>
+  </div>
+
+  <div class="app">
+    <div class="controls">
+      <div class="field">
+        <label for="textInput">Text or URL</label>
+        <textarea id="textInput" placeholder="https://example.com">https://digitalheroesco.com</textarea>
+      </div>
+      <div class="control-row">
+        <div class="field">
+          <label for="sizeSelect">Size</label>
+          <select id="sizeSelect">
+            <option value="160">Small</option>
+            <option value="256" selected>Medium</option>
+            <option value="400">Large</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="colorInput">Color</label>
+          <input type="color" id="colorInput" value="#0b0e1a">
+        </div>
+      </div>
+    </div>
+
+    <div class="preview">
+      <div class="qr-frame">
+        <div id="qrcode"></div>
+      </div>
+      <button class="btn btn-primary" id="downloadBtn">Download PNG</button>
+    </div>
+  </div>
+
+  <div class="dh-banner">
+    <p>This tool was built as part of a developer trial task.</p>
+    <a href="https://digitalheroesco.com" target="_blank" rel="noopener noreferrer" class="btn-dh">Built for Digital Heroes ↗</a>
+  </div>
+</main>
+
+<footer>
+  Built by Shwet Raj · <a href="mailto:shwetraj248@gmail.com">shwetraj248@gmail.com</a>
+</footer>
+
+<script>
+  var qrContainer = document.getElementById('qrcode');
+  var textInput = document.getElementById('textInput');
+  var sizeSelect = document.getElementById('sizeSelect');
+  var colorInput = document.getElementById('colorInput');
+  var downloadBtn = document.getElementById('downloadBtn');
+  var qr = null;
+  var debounceTimer = null;
+
+  function render(){
+    var text = textInput.value.trim() || 'https://digitalheroesco.com';
+    var size = parseInt(sizeSelect.value, 10);
+    var color = colorInput.value;
+    qrContainer.innerHTML = '';
+    qr = new QRCode(qrContainer, {
+      text: text,
+      width: size,
+      height: size,
+      colorDark: color,
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  }
+
+  function debouncedRender(){
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(render, 250);
+  }
+
+  textInput.addEventListener('input', debouncedRender);
+  sizeSelect.addEventListener('change', render);
+  colorInput.addEventListener('input', render);
+
+  downloadBtn.addEventListener('click', function(){
+    var canvas = qrContainer.querySelector('canvas');
+    if(!canvas){ return; }
+    var link = document.createElement('a');
+    link.download = 'qrcode.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  });
+
+  render();
+</script>
+
+</body>
+</html>
