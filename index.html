@@ -10,97 +10,394 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
-  :root{
-    --bg:#0b0e1a; --surface:rgba(22,26,46,0.6); --surface-solid:#161a2e;
-    --border:rgba(124,92,255,0.18); --accent:#7c5cff; --accent-2:#4fd8e0;
-    --text:#f2f1f8; --text-muted:#8a8fa3;
-    --display:'Space Grotesk', sans-serif; --body:'Inter', sans-serif; --mono:'JetBrains Mono', monospace;
+  /* ===================================================
+     BASIC RESET
+  =================================================== */
+  *{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  body{background:var(--bg); color:var(--text); font-family:var(--body); min-height:100vh;}
-  a{color:inherit;}
-  a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var(--accent-2); outline-offset:3px;}
 
+  body{
+    background: #0b0e1a;
+    color: #f2f1f8;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  a{ color: inherit; }
+
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
+    outline: 2px solid #4fd8e0;
+    outline-offset: 3px;
+  }
+
+  /* ===================================================
+     BACKGROUND ORBS (naya addition — soft glow blobs)
+  =================================================== */
+  .bg-orb{
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.25;
+    pointer-events: none;
+    z-index: 0;
+    animation: orbFloat 18s ease-in-out infinite;
+  }
+  .bg-orb-1{
+    width: 360px; height: 360px;
+    background: #7c5cff;
+    top: -100px; left: -80px;
+  }
+  .bg-orb-2{
+    width: 320px; height: 320px;
+    background: #4fd8e0;
+    bottom: -120px; right: -100px;
+    animation-delay: -8s;
+  }
+  @keyframes orbFloat{
+    0%, 100%{ transform: translate(0,0); }
+    50%{ transform: translate(24px, -24px); }
+  }
+
+  /* ===================================================
+     HEADER
+  =================================================== */
   header{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:20px 28px; border-bottom:1px solid var(--border);
-    flex-wrap:wrap; gap:12px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 28px;
+    border-bottom: 1px solid rgba(124,92,255,0.18);
+    flex-wrap: wrap;
+    gap: 12px;
   }
-  .back{font-size:14px; color:var(--text-muted); display:flex; align-items:center; gap:6px;}
-  .back:hover{color:var(--text);}
-  .brand{font-family:var(--display); font-weight:700; font-size:18px; display:flex; align-items:center; gap:8px;}
+  .back{
+    font-size: 14px;
+    color: #8a8fa3;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s ease, transform 0.2s ease;
+  }
+  .back:hover{
+    color: #f2f1f8;
+    transform: translateX(-3px);
+  }
+  .brand{
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
   .brand-mark{
-    width:28px; height:28px; border-radius:8px;
-    background:linear-gradient(135deg, var(--accent), var(--accent-2));
-    display:flex; align-items:center; justify-content:center; font-size:14px;
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #7c5cff, #4fd8e0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
   }
 
-  main{max-width:920px; margin:0 auto; padding:60px 24px 40px;}
-  .page-head{margin-bottom:40px;}
-  .eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-2); margin-bottom:10px;}
-  h1{font-family:var(--display); font-weight:700; font-size:clamp(28px,5vw,40px); margin-bottom:10px;}
-  .page-sub{color:var(--text-muted); max-width:480px;}
+  /* ===================================================
+     PAGE INTRO
+  =================================================== */
+  main{
+    position: relative;
+    z-index: 1;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 60px 24px 40px;
+  }
+  .page-head{
+    margin-bottom: 40px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .eyebrow{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #4fd8e0;
+    margin-bottom: 10px;
+  }
+  h1{
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(28px, 5vw, 40px);
+    margin-bottom: 10px;
+  }
+  .page-sub{
+    color: #8a8fa3;
+    max-width: 480px;
+  }
 
+  @keyframes fadeUp{
+    from{ opacity: 0; transform: translateY(16px); }
+    to{ opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===================================================
+     APP CARD
+  =================================================== */
   .app{
-    display:grid; grid-template-columns:1fr 1fr; gap:32px;
-    background:var(--surface-solid); border:1px solid var(--border); border-radius:24px; padding:36px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    background: #161a2e;
+    border: 1px solid rgba(124,92,255,0.18);
+    border-radius: 24px;
+    padding: 36px;
+    animation: fadeUp 0.6s ease 0.1s both;
   }
-  .field{margin-bottom:22px;}
-  label{display:block; font-size:13px; color:var(--text-muted); margin-bottom:8px; font-family:var(--mono);}
+
+  .field{ margin-bottom: 22px; }
+  label{
+    display: block;
+    font-size: 13px;
+    color: #8a8fa3;
+    margin-bottom: 8px;
+    font-family: 'JetBrains Mono', monospace;
+  }
   textarea, select, input[type="color"]{
-    width:100%; background:rgba(255,255,255,0.04); border:1px solid var(--border);
-    border-radius:10px; padding:12px 14px; color:var(--text); font-family:var(--body); font-size:14px;
-    resize:vertical;
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(124,92,255,0.18);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: #f2f1f8;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    resize: vertical;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }
-  textarea{min-height:90px;}
-  .control-row{display:flex; gap:16px;}
-  .control-row .field{flex:1;}
-  input[type="color"]{height:44px; padding:4px; cursor:pointer;}
+  textarea{ min-height: 90px; }
 
-  .preview{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;}
+  /* glow effect jab field pe focus ho */
+  textarea:focus, select:focus, input[type="color"]:focus{
+    border-color: #7c5cff;
+    box-shadow: 0 0 0 4px rgba(124,92,255,0.15);
+  }
+
+  /* character counter — naya addition */
+  .char-count{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #8a8fa3;
+    text-align: right;
+    margin-top: 6px;
+  }
+
+  .control-row{ display: flex; gap: 16px; }
+  .control-row .field{ flex: 1; }
+  input[type="color"]{ height: 44px; padding: 4px; cursor: pointer; }
+
+  /* color preset swatches — naya addition */
+  .color-presets{
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .swatch{
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.15);
+    cursor: pointer;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  .swatch:hover{
+    transform: scale(1.15);
+    border-color: #fff;
+  }
+
+  /* ===================================================
+     QR PREVIEW
+  =================================================== */
+  .preview{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
   .qr-frame{
-    background:#fff; padding:20px; border-radius:18px;
-    box-shadow:0 30px 60px -20px rgba(0,0,0,.6);
+    background: #fff;
+    padding: 20px;
+    border-radius: 18px;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6);
+    transition: box-shadow 0.3s ease;
   }
-  #qrcode{display:flex; align-items:center; justify-content:center;}
-  #qrcode img, #qrcode canvas{border-radius:4px;}
+  .qr-frame:hover{
+    box-shadow: 0 30px 70px -16px rgba(124,92,255,0.45);
+  }
+  #qrcode{ display: flex; align-items: center; justify-content: center; }
+  #qrcode img, #qrcode canvas{ border-radius: 4px; }
 
+  /* pop animation jab QR regenerate hota hai */
+  @keyframes qrPop{
+    0%{ transform: scale(0.92); opacity: 0.4; }
+    100%{ transform: scale(1); opacity: 1; }
+  }
+  .qr-pop{ animation: qrPop 0.35s ease; }
+
+  .preview-actions{
+    display: flex;
+    gap: 10px;
+    width: 100%;
+  }
+
+  /* ===================================================
+     BUTTONS
+  =================================================== */
   .btn{
-    font-family:var(--body); font-weight:600; font-size:14px; padding:13px 24px; border-radius:12px;
-    border:1px solid transparent; cursor:pointer; display:inline-flex; align-items:center; gap:8px;
-    transition:transform .2s ease, box-shadow .2s ease;
-    width:100%; justify-content:center;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 13px 24px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    flex: 1;
   }
-  .btn-primary{background:linear-gradient(135deg, var(--accent), #6b4fe0); color:#fff; box-shadow:0 8px 30px -8px rgba(124,92,255,.6);}
-  .btn-primary:hover{transform:translateY(-2px);}
-  .btn-primary:disabled{opacity:.5; cursor:not-allowed; transform:none;}
+  .btn-primary{
+    background: linear-gradient(135deg, #7c5cff, #6b4fe0);
+    color: #fff;
+    box-shadow: 0 8px 30px -8px rgba(124,92,255,0.6);
+  }
+  .btn-primary:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 12px 36px -8px rgba(124,92,255,0.8);
+  }
+  .btn-primary:disabled{
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
 
+  /* copy button — naya addition, ghost style */
+  .btn-ghost{
+    background: rgba(255,255,255,0.04);
+    color: #f2f1f8;
+    border-color: rgba(124,92,255,0.18);
+  }
+  .btn-ghost:hover{
+    transform: translateY(-2px);
+    border-color: #7c5cff;
+    background: rgba(124,92,255,0.1);
+  }
+
+  /* ===================================================
+     TOAST NOTIFICATION (naya addition — "Copied!" jaisa message)
+  =================================================== */
+  .toast{
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #161a2e;
+    border: 1px solid rgba(79,216,224,0.4);
+    color: #4fd8e0;
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+    z-index: 999;
+    box-shadow: 0 10px 30px -8px rgba(0,0,0,0.5);
+  }
+  .toast.show{
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ===================================================
+     DIGITAL HEROES BANNER
+  =================================================== */
   .dh-banner{
-    margin-top:32px; padding:20px 24px; border-radius:16px;
-    background:var(--surface); border:1px solid var(--border);
-    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;
+    margin-top: 32px;
+    padding: 20px 24px;
+    border-radius: 16px;
+    background: rgba(22,26,46,0.6);
+    border: 1px solid rgba(124,92,255,0.18);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    animation: fadeUp 0.6s ease 0.2s both;
   }
-  .dh-banner p{font-size:13px; color:var(--text-muted);}
+  .dh-banner p{ font-size: 13px; color: #8a8fa3; }
   .btn-dh{
-    background:transparent; border:1px solid var(--accent-2); color:var(--accent-2);
-    padding:11px 20px; border-radius:10px; font-size:13px; font-weight:600;
-    display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+    background: transparent;
+    border: 1px solid #4fd8e0;
+    color: #4fd8e0;
+    padding: 11px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: background 0.2s ease, transform 0.2s ease;
   }
-  .btn-dh:hover{background:rgba(79,216,224,0.1);}
+  .btn-dh:hover{
+    background: rgba(79,216,224,0.1);
+    transform: translateY(-2px);
+  }
 
+  /* ===================================================
+     FOOTER
+  =================================================== */
   footer{
-    text-align:center; padding:28px 24px; color:var(--text-muted); font-size:13px;
-    border-top:1px solid var(--border); margin-top:40px;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 28px 24px;
+    color: #8a8fa3;
+    font-size: 13px;
+    border-top: 1px solid rgba(124,92,255,0.18);
+    margin-top: 40px;
   }
-  footer a{color:var(--accent-2);}
+  footer a{ color: #4fd8e0; }
 
-  @media (max-width:720px){
-    .app{grid-template-columns:1fr;}
-    .control-row{flex-direction:column;}
+  /* ===================================================
+     RESPONSIVE
+  =================================================== */
+  @media (max-width: 720px){
+    .app{ grid-template-columns: 1fr; }
+    .control-row{ flex-direction: column; }
+  }
+
+  /* motion-sensitive logon ke liye animations band */
+  @media (prefers-reduced-motion: reduce){
+    *{
+      animation: none !important;
+      transition: none !important;
+    }
   }
 </style>
 </head>
 <body>
+
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
 
 <header>
   <a href="https://shwet-raj-portfolio.vercel.app" class="back">← Shwet Raj</a>
@@ -119,6 +416,7 @@
       <div class="field">
         <label for="textInput">Text or URL</label>
         <textarea id="textInput" placeholder="https://example.com">https://digitalheroesco.com</textarea>
+        <div class="char-count" id="charCount">0 characters</div>
       </div>
       <div class="control-row">
         <div class="field">
@@ -132,6 +430,13 @@
         <div class="field">
           <label for="colorInput">Color</label>
           <input type="color" id="colorInput" value="#0b0e1a">
+          <div class="color-presets" id="colorPresets">
+            <span class="swatch" data-color="#0b0e1a" style="background:#0b0e1a" title="Black"></span>
+            <span class="swatch" data-color="#7c5cff" style="background:#7c5cff" title="Violet"></span>
+            <span class="swatch" data-color="#4fd8e0" style="background:#4fd8e0" title="Cyan"></span>
+            <span class="swatch" data-color="#ff6b4a" style="background:#ff6b4a" title="Orange"></span>
+            <span class="swatch" data-color="#4ade80" style="background:#4ade80" title="Green"></span>
+          </div>
         </div>
       </div>
     </div>
@@ -140,9 +445,14 @@
       <div class="qr-frame">
         <div id="qrcode"></div>
       </div>
-      <button class="btn btn-primary" id="downloadBtn">Download PNG</button>
+      <div class="preview-actions">
+        <button class="btn btn-ghost" id="copyBtn">Copy Link</button>
+        <button class="btn btn-primary" id="downloadBtn">Download PNG</button>
+      </div>
     </div>
   </div>
+
+  <div class="toast" id="toast">Copied to clipboard ✓</div>
 
   <div class="dh-banner">
     <p>This tool was built as part of a developer trial task.</p>
@@ -176,6 +486,53 @@
       colorLight: '#ffffff',
       correctLevel: QRCode.CorrectLevel.H
     });
+    // pop animation jab bhi QR naya banta hai
+    qrContainer.classList.remove('qr-pop');
+    void qrContainer.offsetWidth; // animation ko restart karne ka trick
+    qrContainer.classList.add('qr-pop');
+  }
+
+  // character counter update
+  var charCount = document.getElementById('charCount');
+  function updateCharCount(){
+    if(charCount){
+      charCount.textContent = textInput.value.length + ' characters';
+    }
+  }
+  textInput.addEventListener('input', updateCharCount);
+  updateCharCount();
+
+  // color preset swatches click karne par color set ho jaye
+  var colorPresets = document.getElementById('colorPresets');
+  if(colorPresets){
+    colorPresets.addEventListener('click', function(e){
+      if(e.target.classList.contains('swatch')){
+        colorInput.value = e.target.getAttribute('data-color');
+        render();
+      }
+    });
+  }
+
+  // toast message dikhane ka helper
+  var toast = document.getElementById('toast');
+  function showToast(message){
+    if(!toast) return;
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(function(){ toast.classList.remove('show'); }, 1800);
+  }
+
+  // copy link button
+  var copyBtn = document.getElementById('copyBtn');
+  if(copyBtn){
+    copyBtn.addEventListener('click', function(){
+      var text = textInput.value.trim() || 'https://digitalheroesco.com';
+      if(navigator.clipboard){
+        navigator.clipboard.writeText(text).then(function(){
+          showToast('Copied to clipboard ✓');
+        });
+      }
+    });
   }
 
   function debouncedRender(){
@@ -194,6 +551,7 @@
     link.download = 'qrcode.png';
     link.href = canvas.toDataURL('image/png');
     link.click();
+    showToast('Downloaded ✓');
   });
 
   render();
