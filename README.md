@@ -4,7 +4,7 @@ A free, no-signup QR code generator. Type a link or any text, get a downloadable
 
 ## Live
 
-_Add your Vercel URL here after deploying_
+https://shwet-raj-quickqr.vercel.app
 
 ## Features
 
